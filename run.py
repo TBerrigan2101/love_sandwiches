@@ -21,7 +21,6 @@ def get_sales_data():
     via the terminal, which must be a string of 6 numbers separated
     by commas. The loop will repeatedly request data, until it is valid.
     """
-
     while True:
         print("Please enter sales data from the last market.")
         print("Data should be six numbers, separated by commas.")
@@ -32,10 +31,10 @@ def get_sales_data():
         sales_data = data_str.split(",")
 
         if validate_data(sales_data):
-            print("Data is valid")
+            print("Data is valid!")
             break
 
-    return sales_data    
+    return sales_data
 
 
 def validate_data(values):
@@ -44,10 +43,8 @@ def validate_data(values):
     Raises ValueError if strings cannot be converted into int,
     or if there aren't exactly 6 values.
     """
-
-    print(values)
     try:
-        [int(values) for values in values]
+        [int(value) for value in values]
         if len(values) != 6:
             raise ValueError(
                 f"Exactly 6 values required, you provided {len(values)}"
@@ -56,16 +53,18 @@ def validate_data(values):
         print(f"Invalid data: {e}, please try again.\n")
         return False
 
-    return True  
+    return True
+
 
 def update_sales_worksheet(data):
     """
-    Update sales worksheet, add new row with the list data provided.
+    Update sales worksheet, add new row with the list data provided
     """
     print("Updating sales worksheet...\n")
     sales_worksheet = SHEET.worksheet("sales")
     sales_worksheet.append_row(data)
     print("Sales worksheet updated successfully.\n")
+
 
 def calculate_surplus_data(sales_row):
     """
@@ -77,13 +76,23 @@ def calculate_surplus_data(sales_row):
     print("Calculating surplus data...\n")
     stock = SHEET.worksheet("stock").get_all_values()
     stock_row = stock[-1]
-
+    
     surplus_data = []
     for stock, sales in zip(stock_row, sales_row):
         surplus = int(stock) - sales
         surplus_data.append(surplus)
-    
+
     return surplus_data
+
+def update_surplus_worksheet(data):
+    """
+    Update surplus worksheet, add new row with the list data provided
+    """
+    print("Updating surplus worksheet...\n")
+    surplus_worksheet = SHEET.worksheet("surplus")
+    surplus_worksheet.append_row(data)
+    print("Surplus worksheet updated successfully.\n")    
+
 
 def main():
     """
@@ -93,7 +102,8 @@ def main():
     sales_data = [int(num) for num in data]
     update_sales_worksheet(sales_data)
     new_surplus_data = calculate_surplus_data(sales_data)
-    print(new_surplus_data)
+    update_surplus_worksheet(new_surplus_data)
+
 
 print("Welcome to Love Sandwiches Data Automation")
 main()
